@@ -225,15 +225,17 @@
   #overlay.show{opacity:1; pointer-events:auto;}
   #drawer{
     position:fixed; left:0; right:0; bottom:0; z-index:601; background:#fff;
-    border-radius:22px 22px 0 0; max-height:85vh; display:flex; flex-direction:column;
+    border-radius:22px 22px 0 0; max-height:90vh; display:flex; flex-direction:column;
     transform:translateY(100%); transition:transform .3s ease; box-shadow:0 -8px 30px rgba(0,0,0,.25);
+    overflow:hidden;
   }
   #drawer.show{transform:translateY(0);}
-  #drawer .handle{width:42px;height:5px;background:#eee;border-radius:50px;margin:10px auto 4px;}
-  #drawer .dh{display:flex; align-items:center; justify-content:space-between; padding:6px 18px 10px; border-bottom:1px solid #f3e6da;}
+  #drawer .handle{width:42px;height:5px;background:#eee;border-radius:50px;margin:10px auto 4px; flex-shrink:0;}
+  #drawer .dh{display:flex; align-items:center; justify-content:space-between; padding:6px 18px 10px; border-bottom:1px solid #f3e6da; flex-shrink:0;}
   #drawer .dh h3{margin:0; color:var(--naranja-prof);}
   #drawer .dh button{background:none; border:none; font-size:1.3rem; color:#bbb; cursor:pointer;}
-  #cart-items{overflow-y:auto; padding:10px 18px; flex:1;}
+  #drawer-scroll{overflow-y:auto; flex:1; min-height:0;}
+  #cart-items{padding:10px 18px;}
   .cart-item{display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px dashed #f3e6da; gap:8px;}
   .cart-item .ci-name{font-weight:700; font-size:.88rem; flex:1;}
   .cart-item .ci-price{font-size:.78rem; color:#8a6651;}
@@ -256,11 +258,12 @@
   .dform .privacy{font-size:.68rem; color:#bda08b; margin-top:8px; line-height:1.4;}
   #drawer .total-row{
     display:flex; justify-content:space-between; align-items:center; padding:12px 18px; font-weight:800;
-    border-top:1px solid #f3e6da; font-size:1.05rem; color:var(--naranja-prof);
+    border-top:1px solid #f3e6da; font-size:1.05rem; color:var(--naranja-prof); flex-shrink:0;
   }
   #send-btn{
-    margin:0 18px 18px; background:#25D366; color:#fff; border:none; border-radius:50px;
+    margin:0 18px calc(18px + env(safe-area-inset-bottom)); background:#25D366; color:#fff; border:none; border-radius:50px;
     padding:14px; font-weight:800; font-size:.98rem; cursor:pointer; box-shadow:0 6px 16px rgba(37,211,102,.35);
+    flex-shrink:0;
   }
   #send-btn:disabled{opacity:.5;}
 
@@ -394,7 +397,7 @@
     </div>
 
     <div class="card">
-      <div class="img-wrap"><img src="prod_fricapollo.jpg" alt="Fricapollito personal"></div>
+      <div class="img-wrap"><img src="prod_fricapollito.jpg" alt="Fricapollito personal"></div>
       <div class="info">
         <h3>Fricapöllitö</h3>
         <p class="desc">La versión personal del FricaPöllö: mismas papitas, pollo apanado, salsas y doble queso, en porción individual.</p>
@@ -406,7 +409,7 @@
     </div>
 
     <div class="card">
-      <div class="img-wrap"><img src="prod_fricaburger.jpg" alt="FricaBurger" style="object-position:bottom;"></div>
+      <div class="img-wrap"><img src="prod_fricaburger.jpg" alt="FricaBurger"></div>
       <div class="info">
         <h3>FricaBurger</h3>
         <p class="desc">Pan artesanal suave con crujientes tenders de pollo (130g), lechuga fresca, tomate y triple queso mozzarella derretido, coronada con una alita crocante.</p>
@@ -418,7 +421,7 @@
     </div>
 
     <div class="card">
-      <div class="img-wrap"><img src="prod_fricaburger.jpg" alt="Fricawich" style="object-position:bottom;"></div>
+      <div class="img-wrap"><img src="prod_fricaburger.jpg" alt="Fricawich"></div>
       <div class="info">
         <h3>Fricawich</h3>
         <p class="desc">Nuestro sándwich crocante de pollo, lechuga, tomate y la cremosidad de nuestra salsa especial.</p>
@@ -584,6 +587,7 @@
 <div id="drawer">
   <div class="handle"></div>
   <div class="dh"><h3>Tu pedido</h3><button onclick="closeDrawer()">✕</button></div>
+  <div id="drawer-scroll">
   <div id="cart-items">
     <div id="empty-cart">Tu carrito está vacío.<br>Agrega tus alitas, burgers y combos favoritos 🍗</div>
   </div>
@@ -618,6 +622,7 @@
     <textarea id="d-comments" rows="2" placeholder="Ej: sin picante, alita adicional, etc."></textarea>
 
     <p class="privacy">🔒 Tus datos solo se usan para procesar este pedido y nunca se compartirán con terceros, conforme a la Ley 1581 de 2012 de Protección de Datos.</p>
+  </div>
   </div>
 
   <div class="total-row"><span>Total</span><span id="cart-total">$0</span></div>
