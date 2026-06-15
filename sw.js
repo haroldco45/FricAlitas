@@ -3,17 +3,17 @@ const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './assets/prod_alitas_tray.jpg',
-  './assets/prod_fricapollo.jpg',
-  './assets/prod_fricaburger.jpg',
-  './assets/prod_tenders.jpg',
-  './assets/prod_fricacrush.jpg',
-  './assets/prod_ramo.jpg',
-  './assets/acomp_francesa.jpg',
-  './assets/acomp_criolla.jpg',
-  './assets/acomp_yucas.jpg'
+  './icon-192.png',
+  './icon-512.png',
+  './prod_alitas_tray.jpg',
+  './prod_fricapollo.jpg',
+  './prod_fricaburger.jpg',
+  './prod_tenders.jpg',
+  './prod_fricacrush.jpg',
+  './prod_ramo.jpg',
+  './acomp_francesa.jpg',
+  './acomp_criolla.jpg',
+  './acomp_yucas.jpg'
 ];
 
 self.addEventListener('install', event => {
@@ -37,4 +37,3 @@ self.addEventListener('fetch', event => {
     caches.match(event.request).then(cached => cached || fetch(event.request).catch(()=>cached))
   );
 });
-
