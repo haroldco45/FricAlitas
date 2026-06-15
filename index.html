@@ -1,1 +1,856 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FricAlitas Dosquebradas | Alitas, Burgers y Combos</title>
+<meta name="description" content="FricAlitas Dosquebradas: alitas crujientes bañadas en tu salsa favorita, FricaBurger, FricaPollo y combos para compartir. Pide ahora por WhatsApp.">
+
+<!-- Open Graph -->
+<meta property="og:title" content="FricAlitas Dosquebradas 🍗">
+<meta property="og:description" content="Alitas crujientes, jugosas y bañadas en la salsa que elijas. FricaBurger, FricaPollo, combos y mucho más. ¡Pide por WhatsApp!">
+<meta property="og:image" content="https://haroldco45.github.io/fricalitas-dosquebradas/assets/og-image.jpg">
+<meta property="og:url" content="https://haroldco45.github.io/fricalitas-dosquebradas/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FricAlitas Dosquebradas 🍗">
+<meta name="twitter:description" content="Crujientes, jugosas y bañadas en la salsa que elijas. ¡Pide ahora por WhatsApp!">
+<meta name="twitter:image" content="https://haroldco45.github.io/fricalitas-dosquebradas/assets/og-image.jpg">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#E85D1A">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+
+<style>
+  :root{
+    --naranja:#F4742B;
+    --naranja-osc:#E0540F;
+    --naranja-prof:#C2410C;
+    --crema:#FFF6EC;
+    --crema2:#FFEAD2;
+    --marron:#5B3A1E;
+    --rojo:#D6311E;
+    --verde:#3E9C4F;
+    --sombra: 0 6px 18px rgba(194,65,12,.18);
+    font-family: 'Poppins', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  body{
+    margin:0; background:var(--crema);
+    color:var(--marron);
+    font-family:'Poppins',system-ui,sans-serif;
+    padding-bottom:90px;
+  }
+  h1,h2,h3,.brand{
+    font-family:'Baloo 2','Poppins',system-ui,sans-serif;
+  }
+  a{color:inherit;}
+
+  /* ===== Subscription gate ===== */
+  #gate{
+    position:fixed; inset:0; z-index:9999;
+    background:linear-gradient(160deg,var(--naranja) 0%,var(--naranja-prof) 100%);
+    display:flex; align-items:center; justify-content:center;
+    flex-direction:column; text-align:center; padding:24px; color:#fff;
+  }
+  #gate img{width:120px; height:120px; border-radius:50%; box-shadow:0 8px 28px rgba(0,0,0,.25); margin-bottom:14px;}
+  #gate h1{font-size:1.9rem; margin:6px 0 4px; letter-spacing:.5px;}
+  #gate p{font-size:.95rem; opacity:.95; max-width:320px; line-height:1.5;}
+  #gate .clock{
+    margin-top:18px; font-size:1.05rem; background:rgba(255,255,255,.15);
+    padding:10px 18px; border-radius:14px; font-weight:600;
+  }
+  #gate .status{margin-top:14px; font-weight:700; font-size:1.05rem;}
+  #gate .status.open{color:#D6FFCB;}
+  #gate .status.closed{color:#FFD7CC;}
+  #gate button{
+    margin-top:22px; background:#fff; color:var(--naranja-prof);
+    border:none; font-weight:800; font-size:1rem; padding:14px 34px;
+    border-radius:50px; box-shadow:0 6px 16px rgba(0,0,0,.2); cursor:pointer;
+  }
+
+  /* ===== Header ===== */
+  header.top{
+    background:linear-gradient(135deg,var(--naranja) 0%, var(--naranja-prof) 100%);
+    padding:18px 16px 22px; color:#fff; position:relative; overflow:hidden;
+  }
+  header.top::after{
+    content:""; position:absolute; right:-40px; top:-40px; width:160px; height:160px;
+    background:rgba(255,255,255,.08); border-radius:50%;
+  }
+  .top-row{display:flex; align-items:center; gap:12px;}
+  .top-row img.logo{width:58px;height:58px;border-radius:50%; box-shadow:0 4px 12px rgba(0,0,0,.25);}
+  .top-row .brandbox h1{font-size:1.5rem; margin:0; line-height:1.1;}
+  .top-row .brandbox span{font-size:.78rem; opacity:.9;}
+  .status-pill{
+    margin-top:12px; display:inline-flex; align-items:center; gap:6px;
+    background:rgba(255,255,255,.18); padding:6px 14px; border-radius:50px; font-size:.8rem; font-weight:600;
+  }
+  .status-pill .dot{width:9px;height:9px;border-radius:50%; background:#7CFF8C;}
+  .status-pill.closed .dot{background:#FFB199;}
+
+  /* ===== Promo banner ===== */
+  .promo{
+    margin:14px 16px 0; border-radius:18px; overflow:hidden; position:relative;
+    box-shadow:var(--sombra);
+  }
+  .promo img{width:100%; display:block;}
+  .promo .tag{
+    position:absolute; top:10px; left:10px; background:var(--rojo); color:#fff;
+    font-size:.7rem; font-weight:800; padding:5px 10px; border-radius:50px; letter-spacing:.5px;
+  }
+
+  /* ===== Section titles ===== */
+  .section{padding:22px 16px 4px;}
+  .section h2{
+    font-size:1.25rem; margin:0 0 12px; color:var(--naranja-prof);
+    display:flex; align-items:center; gap:8px;
+  }
+  .section h2 .ico{font-size:1.4rem;}
+  .section p.sub{font-size:.82rem; color:#8a6651; margin:-6px 0 12px;}
+
+  /* ===== Salsas / chips ===== */
+  .chips{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;}
+  .chip{
+    background:var(--crema2); color:var(--naranja-prof); font-weight:700;
+    font-size:.78rem; padding:7px 13px; border-radius:50px; border:1.5px solid #FFD7B0;
+  }
+
+  /* ===== Product cards ===== */
+  .grid{display:flex; flex-direction:column; gap:14px;}
+  .card{
+    background:#fff; border-radius:18px; overflow:hidden; box-shadow:var(--sombra);
+    display:flex; gap:0; border:1px solid #FFE5CC;
+  }
+  .card .img-wrap{
+    width:34%; min-width:108px; flex-shrink:0; overflow:hidden; position:relative;
+  }
+  .card .img-wrap img{width:100%; height:100%; object-fit:cover; display:block;}
+  .card .badge-star{
+    position:absolute; top:6px; left:6px; background:#FFD23F; color:#7A4A00;
+    font-size:.65rem; font-weight:800; padding:3px 8px; border-radius:50px;
+  }
+  .card .info{padding:12px 12px 12px 14px; flex:1; display:flex; flex-direction:column;}
+  .card h3{margin:0 0 4px; font-size:1.02rem; color:var(--naranja-prof);}
+  .card .desc{font-size:.78rem; color:#8a6651; line-height:1.4; margin:0 0 8px; flex:1;}
+  .card .price-row{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+  .card .price{font-weight:800; color:var(--rojo); font-size:1.02rem;}
+  .card .addbtn{
+    background:var(--naranja); color:#fff; border:none; border-radius:50px;
+    font-size:.8rem; font-weight:700; padding:8px 14px; cursor:pointer;
+    display:flex; align-items:center; gap:5px; box-shadow:0 3px 8px rgba(224,84,15,.35);
+  }
+  .card .addbtn:active{transform:scale(.96);}
+
+  /* combos table */
+  .combo-table{
+    background:#fff; border-radius:18px; box-shadow:var(--sombra); padding:14px; border:1px solid #FFE5CC;
+  }
+  .combo-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 4px; border-bottom:1px dashed #FFE0C2;
+  }
+  .combo-row:last-child{border-bottom:none;}
+  .combo-row .lbl{font-weight:700; color:var(--marron); font-size:.92rem; display:flex; align-items:center; gap:6px;}
+  .combo-row .star{color:#FFB100;}
+  .combo-row .price{font-weight:800; color:var(--rojo); font-size:.95rem;}
+  .combo-row .addbtn{
+    background:var(--naranja); color:#fff; border:none; border-radius:50px;
+    font-size:.74rem; font-weight:700; padding:6px 12px; cursor:pointer; margin-left:8px;
+  }
+  .combo-note{font-size:.78rem; color:#8a6651; margin-top:10px; text-align:center;}
+
+  /* acompañantes */
+  .acomp-row{display:flex; gap:10px; margin-top:6px;}
+  .acomp{flex:1; text-align:center;}
+  .acomp img{width:100%; aspect-ratio:1; object-fit:cover; border-radius:50%; border:3px solid #fff; box-shadow:var(--sombra);}
+  .acomp span{display:block; margin-top:6px; font-weight:700; font-size:.78rem; color:var(--naranja-prof);}
+
+  /* extras */
+  .extra-list{background:#fff; border-radius:18px; box-shadow:var(--sombra); padding:6px 14px; border:1px solid #FFE5CC;}
+  .extra-row{display:flex; align-items:center; justify-content:space-between; padding:11px 0; border-bottom:1px dashed #FFE0C2;}
+  .extra-row:last-child{border-bottom:none;}
+  .extra-row .lbl{font-size:.88rem; font-weight:600;}
+  .extra-row .right{display:flex; align-items:center; gap:10px;}
+  .extra-row .price{font-weight:800; color:var(--rojo); font-size:.9rem;}
+  .extra-row .stepper{display:flex; align-items:center; gap:6px;}
+  .extra-row .stepper button{
+    width:26px;height:26px;border-radius:50%; border:none; background:var(--crema2); color:var(--naranja-prof);
+    font-weight:800; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  }
+  .extra-row .stepper .count{min-width:18px; text-align:center; font-weight:700; font-size:.88rem;}
+
+  /* ===== Horarios ===== */
+  .horario-card{background:#fff; border-radius:18px; box-shadow:var(--sombra); padding:14px; border:1px solid #FFE5CC; margin-bottom:12px;}
+  .horario-card h4{margin:0 0 8px; color:var(--naranja-prof); font-size:.95rem; display:flex; align-items:center; gap:6px;}
+  .horario-card .h-row{display:flex; justify-content:space-between; font-size:.82rem; padding:5px 0; border-bottom:1px solid #FFF2E4;}
+  .horario-card .h-row:last-child{border-bottom:none;}
+  .horario-card .h-row .day.today{color:var(--rojo); font-weight:800;}
+  .horario-card .h-row .closed{color:#C2410C; font-weight:700;}
+
+  /* ===== Ubicación / footer ===== */
+  .contact-card{background:#fff;border-radius:18px;box-shadow:var(--sombra);padding:16px;border:1px solid #FFE5CC; text-align:center;}
+  .contact-card .ico-circle{
+    width:54px;height:54px;border-radius:50%; background:var(--crema2); display:flex; align-items:center;justify-content:center;
+    margin:0 auto 8px; font-size:1.6rem;
+  }
+  .contact-card a.btn{
+    display:inline-block; margin-top:12px; background:#25D366; color:#fff; font-weight:800;
+    padding:12px 26px; border-radius:50px; text-decoration:none; box-shadow:0 4px 12px rgba(37,211,102,.35);
+  }
+  footer.brandfoot{
+    text-align:center; font-size:.7rem; color:#C8A78B; padding:26px 16px 10px; line-height:1.6;
+  }
+
+  /* ===== Floating cart button ===== */
+  #cart-fab{
+    position:fixed; bottom:18px; right:16px; z-index:500;
+    background:var(--rojo); color:#fff; border:none; border-radius:50px;
+    padding:14px 22px; font-weight:800; font-size:.95rem; box-shadow:0 8px 22px rgba(214,49,30,.4);
+    display:flex; align-items:center; gap:8px; cursor:pointer;
+  }
+  #cart-fab .count{
+    background:#fff; color:var(--rojo); border-radius:50%; width:24px; height:24px;
+    display:flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:800;
+  }
+  #cart-fab.hidden{display:none;}
+
+  /* ===== Cart drawer ===== */
+  #overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:600; opacity:0; pointer-events:none;
+    transition:opacity .25s;
+  }
+  #overlay.show{opacity:1; pointer-events:auto;}
+  #drawer{
+    position:fixed; left:0; right:0; bottom:0; z-index:601; background:#fff;
+    border-radius:22px 22px 0 0; max-height:85vh; display:flex; flex-direction:column;
+    transform:translateY(100%); transition:transform .3s ease; box-shadow:0 -8px 30px rgba(0,0,0,.25);
+  }
+  #drawer.show{transform:translateY(0);}
+  #drawer .handle{width:42px;height:5px;background:#eee;border-radius:50px;margin:10px auto 4px;}
+  #drawer .dh{display:flex; align-items:center; justify-content:space-between; padding:6px 18px 10px; border-bottom:1px solid #f3e6da;}
+  #drawer .dh h3{margin:0; color:var(--naranja-prof);}
+  #drawer .dh button{background:none; border:none; font-size:1.3rem; color:#bbb; cursor:pointer;}
+  #cart-items{overflow-y:auto; padding:10px 18px; flex:1;}
+  .cart-item{display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px dashed #f3e6da; gap:8px;}
+  .cart-item .ci-name{font-weight:700; font-size:.88rem; flex:1;}
+  .cart-item .ci-price{font-size:.78rem; color:#8a6651;}
+  .cart-item .stepper{display:flex; align-items:center; gap:8px;}
+  .cart-item .stepper button{
+    width:26px;height:26px;border-radius:50%; border:none; background:var(--crema2); color:var(--naranja-prof);
+    font-weight:800; font-size:1rem; cursor:pointer;
+  }
+  .cart-item .ci-sub{font-weight:800; color:var(--rojo); font-size:.85rem; min-width:64px; text-align:right;}
+  #empty-cart{text-align:center; color:#bda08b; padding:36px 10px; font-size:.9rem;}
+  .dform{padding:12px 18px 0;}
+  .dform label{display:block; font-size:.78rem; font-weight:700; color:var(--naranja-prof); margin:8px 0 4px;}
+  .dform input, .dform select, .dform textarea{
+    width:100%; padding:10px 12px; border-radius:12px; border:1.5px solid #FFE0C2; font-size:.88rem; font-family:inherit;
+  }
+  .dform .gpsbtn{
+    margin-top:6px; background:var(--crema2); color:var(--naranja-prof); border:none; border-radius:12px;
+    padding:9px 12px; font-weight:700; font-size:.8rem; width:100%; cursor:pointer;
+  }
+  .dform .privacy{font-size:.68rem; color:#bda08b; margin-top:8px; line-height:1.4;}
+  #drawer .total-row{
+    display:flex; justify-content:space-between; align-items:center; padding:12px 18px; font-weight:800;
+    border-top:1px solid #f3e6da; font-size:1.05rem; color:var(--naranja-prof);
+  }
+  #send-btn{
+    margin:0 18px 18px; background:#25D366; color:#fff; border:none; border-radius:50px;
+    padding:14px; font-weight:800; font-size:.98rem; cursor:pointer; box-shadow:0 6px 16px rgba(37,211,102,.35);
+  }
+  #send-btn:disabled{opacity:.5;}
+
+  /* success screen */
+  #success{
+    position:fixed; inset:0; z-index:700; background:rgba(0,0,0,.5); display:none;
+    align-items:center; justify-content:center; padding:20px;
+  }
+  #success.show{display:flex;}
+  #success .box{background:#fff; border-radius:20px; padding:30px 24px; text-align:center; max-width:320px;}
+  #success .box .emoji{font-size:3rem;}
+  #success .box h3{color:var(--naranja-prof); margin:10px 0 6px;}
+  #success .box p{font-size:.85rem; color:#8a6651; line-height:1.5;}
+  #success .box button{
+    margin-top:14px; background:var(--naranja); color:#fff; border:none; border-radius:50px;
+    padding:11px 28px; font-weight:800; cursor:pointer;
+  }
+
+  @media (min-width:480px){
+    .grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+    .card{flex-direction:column;}
+    .card .img-wrap{width:100%; height:140px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== Subscription / Clock gate ===== -->
+<div id="gate">
+  <img src="icons/icon-512.png" alt="FricAlitas Dosquebradas">
+  <h1>FricAlitas Dosquebradas</h1>
+  <p>Crujientes, jugosas y bañadas en la salsa que tú eligas. ¡Lo hacemos con Alas, alma y corazón!</p>
+  <div class="clock" id="gate-clock">--:--:--</div>
+  <div class="status" id="gate-status">Verificando horario...</div>
+  <button onclick="closeGate()">Ver el menú 🍗</button>
+</div>
+
+<!-- ===== Header ===== -->
+<header class="top">
+  <div class="top-row">
+    <img class="logo" src="icons/icon-512.png" alt="Logo FricAlitas">
+    <div class="brandbox">
+      <h1 class="brand">FricAlitas</h1>
+      <span>Dosquebradas · Risaralda</span>
+    </div>
+  </div>
+  <div class="status-pill" id="header-status">
+    <span class="dot"></span> <span id="header-status-text">Verificando...</span>
+  </div>
+</header>
+
+<!-- ===== Promo banner ===== -->
+<div class="promo">
+  <img src="assets/prod_alitas_tray.jpg" alt="Bandeja de alitas FricAlitas">
+  <div class="tag">★ Combo más pedido</div>
+</div>
+
+<!-- ===== Combos de alas ===== -->
+<section class="section">
+  <h2><span class="ico">🍗</span> Combos de Alitas</h2>
+  <p class="sub">Crujientes, jugosas, bañadas en la salsa que elijas, con los acompañantes que quieras.</p>
+
+  <div class="combo-table">
+    <div class="combo-row">
+      <span class="lbl"><span class="star">★</span> 6 Alas</span>
+      <span class="price">$26.900</span>
+      <button class="addbtn" onclick="addItem('6 Alas (combo)',26900)">Agregar</button>
+    </div>
+    <div class="combo-row">
+      <span class="lbl">10 Alas</span>
+      <span class="price">$36.900</span>
+      <button class="addbtn" onclick="addItem('10 Alas (combo)',36900)">Agregar</button>
+    </div>
+    <div class="combo-row">
+      <span class="lbl">15 Alas</span>
+      <span class="price">$50.900</span>
+      <button class="addbtn" onclick="addItem('15 Alas (combo)',50900)">Agregar</button>
+    </div>
+    <div class="combo-row">
+      <span class="lbl">20 Alas</span>
+      <span class="price">$65.900</span>
+      <button class="addbtn" onclick="addItem('20 Alas (combo)',65900)">Agregar</button>
+    </div>
+    <div class="combo-row">
+      <span class="lbl">30 Alas</span>
+      <span class="price">$96.900</span>
+      <button class="addbtn" onclick="addItem('30 Alas (combo)',96900)">Agregar</button>
+    </div>
+    <div class="combo-note">Alita adicional: <b>$5.900</b> · Incluye acompañante a elección</div>
+  </div>
+
+  <div style="margin-top:14px;">
+    <span style="font-weight:700; font-size:.85rem; color:var(--naranja-prof);">Salsas para tus alitas:</span>
+    <div class="chips" style="margin-top:8px;">
+      <span class="chip">BBQ Gourmet</span>
+      <span class="chip">Miel Mostaza</span>
+      <span class="chip">Picante suave</span>
+      <span class="chip">Picante medio</span>
+      <span class="chip">Picante alto</span>
+    </div>
+  </div>
+
+  <div>
+    <span style="font-weight:700; font-size:.85rem; color:var(--naranja-prof);">Acompañantes (los que quieras):</span>
+    <div class="acomp-row">
+      <div class="acomp"><img src="assets/acomp_francesa.jpg" alt="Papa Francesa"><span>Francesa</span></div>
+      <div class="acomp"><img src="assets/acomp_criolla.jpg" alt="Papa Criolla"><span>Criolla</span></div>
+      <div class="acomp"><img src="assets/acomp_yucas.jpg" alt="Yucas"><span>Yucas</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Especialidades ===== -->
+<section class="section">
+  <h2><span class="ico">⭐</span> Especialidades</h2>
+  <div class="grid">
+
+    <div class="card">
+      <div class="img-wrap">
+        <span class="badge-star">Para 2</span>
+        <img src="assets/prod_fricapollo.jpg" alt="FricaPollo">
+      </div>
+      <div class="info">
+        <h3>FricaPöllö</h3>
+        <p class="desc">400g papitas crocantes (francesa, criolla o mixtas), 200g de filete de pollo apanado, salsa de dulce maíz, BBQ gourmet, miel mostaza y doble queso mozzarella.</p>
+        <div class="price-row">
+          <span class="price">$27.900</span>
+          <button class="addbtn" onclick="addItem('FricaPöllö (para 2)',27900)">+ Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="img-wrap"><img src="assets/prod_fricapollo.jpg" alt="Fricapollito personal"></div>
+      <div class="info">
+        <h3>Fricapöllitö</h3>
+        <p class="desc">La versión personal del FricaPöllö: mismas papitas, pollo apanado, salsas y doble queso, en porción individual.</p>
+        <div class="price-row">
+          <span class="price">$16.900</span>
+          <button class="addbtn" onclick="addItem('Fricapöllitö (personal)',16900)">+ Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="img-wrap"><img src="assets/prod_fricaburger.jpg" alt="FricaBurger" style="object-position:bottom;"></div>
+      <div class="info">
+        <h3>FricaBurger</h3>
+        <p class="desc">Pan artesanal suave con crujientes tenders de pollo (130g), lechuga fresca, tomate y triple queso mozzarella derretido, coronada con una alita crocante.</p>
+        <div class="price-row">
+          <span class="price">$26.900</span>
+          <button class="addbtn" onclick="addItem('FricaBurger',26900)">+ Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="img-wrap"><img src="assets/prod_fricaburger.jpg" alt="Fricawich" style="object-position:bottom;"></div>
+      <div class="info">
+        <h3>Fricawich</h3>
+        <p class="desc">Nuestro sándwich crocante de pollo, lechuga, tomate y la cremosidad de nuestra salsa especial.</p>
+        <div class="price-row">
+          <span class="price">$18.900</span>
+          <button class="addbtn" onclick="addItem('Fricawich',18900)">+ Agregar</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== Combos especiales ===== -->
+<section class="section">
+  <h2><span class="ico">💝</span> Combos para Compartir</h2>
+  <div class="grid">
+
+    <div class="card">
+      <div class="img-wrap"><img src="assets/prod_tenders.jpg" alt="FricaTenders Combo"></div>
+      <div class="info">
+        <h3>FricaTenders Combo</h3>
+        <p class="desc">6 tenders crujientes, doraditos, 100% pechuga, recién salidos, acompañados de papas o yucas y nuestra salsa de la casa.</p>
+        <div class="price-row">
+          <span class="price">$36.900</span>
+          <button class="addbtn" onclick="addItem('FricaTenders Combo',36900)">+ Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="img-wrap"><img src="assets/prod_fricacrush.jpg" alt="Combo FricaCrush"></div>
+      <div class="info">
+        <h3>Combo FricaCrush</h3>
+        <p class="desc">Crujiente, jugoso y hecho para dos: 5 alitas bañadas en tu salsa favorita, FricaBurger, papas y 2 bebidas.</p>
+        <div class="price-row">
+          <span class="price">$49.900</span>
+          <button class="addbtn" onclick="addItem('Combo FricaCrush',49900)">+ Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="img-wrap"><img src="assets/prod_ramo.jpg" alt="Frica Ramö - Ramo de alitas"></div>
+      <div class="info">
+        <h3>Fricä Ramö 💘</h3>
+        <p class="desc">El verdadero ramo roba corazones: 10 alitas bañadas en tu salsa de preferencia, papitas, corazones de zanahoria, caja y mensaje de amor. Ideal para regalo.</p>
+        <div class="price-row">
+          <span class="price">$49.900</span>
+          <button class="addbtn" onclick="addItem('Fricä Ramö (regalo)',49900)">+ Agregar</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== Adiciones y bebidas ===== -->
+<section class="section">
+  <h2><span class="ico">➕</span> Adiciones y Bebidas</h2>
+  <div class="extra-list">
+    <div class="extra-row">
+      <span class="lbl">Porción de papitas</span>
+      <div class="right"><span class="price">$9.500</span>
+        <div class="stepper"><button onclick="step('Porción de papitas',9500,-1)">−</button><span class="count" id="cnt-Porción de papitas">0</span><button onclick="step('Porción de papitas',9500,1)">+</button></div>
+      </div>
+    </div>
+    <div class="extra-row">
+      <span class="lbl">Adición de queso</span>
+      <div class="right"><span class="price">$4.500</span>
+        <div class="stepper"><button onclick="step('Adición de queso',4500,-1)">−</button><span class="count" id="cnt-Adición de queso">0</span><button onclick="step('Adición de queso',4500,1)">+</button></div>
+      </div>
+    </div>
+    <div class="extra-row">
+      <span class="lbl">Adición trozos de pollo</span>
+      <div class="right"><span class="price">$9.900</span>
+        <div class="stepper"><button onclick="step('Adición trozos de pollo',9900,-1)">−</button><span class="count" id="cnt-Adición trozos de pollo">0</span><button onclick="step('Adición trozos de pollo',9900,1)">+</button></div>
+      </div>
+    </div>
+    <div class="extra-row">
+      <span class="lbl">Adición de salsa</span>
+      <div class="right"><span class="price">$1.500</span>
+        <div class="stepper"><button onclick="step('Adición de salsa',1500,-1)">−</button><span class="count" id="cnt-Adición de salsa">0</span><button onclick="step('Adición de salsa',1500,1)">+</button></div>
+      </div>
+    </div>
+    <div class="extra-row">
+      <span class="lbl">Tender adicional</span>
+      <div class="right"><span class="price">$4.900</span>
+        <div class="stepper"><button onclick="step('Tender adicional',4900,-1)">−</button><span class="count" id="cnt-Tender adicional">0</span><button onclick="step('Tender adicional',4900,1)">+</button></div>
+      </div>
+    </div>
+    <div class="extra-row">
+      <span class="lbl">Alita adicional</span>
+      <div class="right"><span class="price">$5.900</span>
+        <div class="stepper"><button onclick="step('Alita adicional',5900,-1)">−</button><span class="count" id="cnt-Alita adicional">0</span><button onclick="step('Alita adicional',5900,1)">+</button></div>
+      </div>
+    </div>
+    <div class="extra-row">
+      <span class="lbl">Coca-Cola personal</span>
+      <div class="right"><span class="price">$4.500</span>
+        <div class="stepper"><button onclick="step('Coca-Cola personal',4500,-1)">−</button><span class="count" id="cnt-Coca-Cola personal">0</span><button onclick="step('Coca-Cola personal',4500,1)">+</button></div>
+      </div>
+    </div>
+    <div class="extra-row">
+      <span class="lbl">Botella de agua</span>
+      <div class="right"><span class="price">$4.000</span>
+        <div class="stepper"><button onclick="step('Botella de agua',4000,-1)">−</button><span class="count" id="cnt-Botella de agua">0</span><button onclick="step('Botella de agua',4000,1)">+</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Horarios ===== -->
+<section class="section">
+  <h2><span class="ico">⏰</span> Horarios</h2>
+
+  <div class="horario-card">
+    <h4>🚚 FricaTruck Dosquebradas</h4>
+    <div class="h-row"><span class="day" data-day="1">Lunes</span><span>5:00pm – 11:30pm</span></div>
+    <div class="h-row"><span class="day" data-day="2">Martes</span><span class="closed">CERRADO</span></div>
+    <div class="h-row"><span class="day" data-day="3">Miércoles</span><span>5:00pm – 11:30pm</span></div>
+    <div class="h-row"><span class="day" data-day="4">Jueves</span><span>5:00pm – 11:30pm</span></div>
+    <div class="h-row"><span class="day" data-day="5">Viernes</span><span>5:00pm – 11:30pm</span></div>
+    <div class="h-row"><span class="day" data-day="6">Sábado</span><span>5:00pm – 11:30pm</span></div>
+    <div class="h-row"><span class="day" data-day="0">Domingo</span><span>5:00pm – 11:30pm</span></div>
+  </div>
+
+  <div class="horario-card">
+    <h4>🛵 Cocina Oculta Pereira (solo domicilios)</h4>
+    <div class="h-row"><span class="day">Lunes</span><span>11:30am – 4:00pm</span></div>
+    <div class="h-row"><span class="day">Martes</span><span class="closed">CERRADO</span></div>
+    <div class="h-row"><span class="day">Miércoles</span><span>11:30am – 4:00pm</span></div>
+    <div class="h-row"><span class="day">Jueves</span><span>11:30am – 4:00pm</span></div>
+    <div class="h-row"><span class="day">Viernes</span><span>11:30am – 4:00pm</span></div>
+    <div class="h-row"><span class="day">Sábado</span><span>11:30am – 4:00pm</span></div>
+    <div class="h-row"><span class="day">Domingo</span><span>11:30am – 4:00pm</span></div>
+  </div>
+</section>
+
+<!-- ===== Contacto / pedido ===== -->
+<section class="section">
+  <h2><span class="ico">📲</span> Haz tu pedido</h2>
+  <div class="contact-card">
+    <div class="ico-circle">🍗</div>
+    <p style="font-size:.88rem; margin:0 0 4px;">Agrega tus productos al carrito y envíanos tu pedido directo por WhatsApp.</p>
+    <p style="font-size:.78rem; color:#8a6651;">+57 312 8614711</p>
+    <a class="btn" href="https://wa.me/573128614711" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+  </div>
+</section>
+
+<footer class="brandfoot">
+  FricAlitas Dosquebradas · Restaurante de alitas, burgers y combos<br>
+  Desarrollada por Vibras Positivas HM — Derechos de Autor Reservados
+</footer>
+
+<!-- ===== Cart FAB ===== -->
+<button id="cart-fab" class="hidden" onclick="openDrawer()">
+  🛒 Ver pedido <span class="count" id="fab-count">0</span>
+</button>
+
+<!-- ===== Overlay + Drawer ===== -->
+<div id="overlay" onclick="closeDrawer()"></div>
+<div id="drawer">
+  <div class="handle"></div>
+  <div class="dh"><h3>Tu pedido</h3><button onclick="closeDrawer()">✕</button></div>
+  <div id="cart-items">
+    <div id="empty-cart">Tu carrito está vacío.<br>Agrega tus alitas, burgers y combos favoritos 🍗</div>
+  </div>
+
+  <div class="dform" id="delivery-form" style="display:none;">
+    <label>Tipo de entrega</label>
+    <select id="d-type" onchange="toggleAddressFields()">
+      <option value="domicilio">Domicilio</option>
+      <option value="recoger">Recoger en el FricaTruck</option>
+    </select>
+
+    <label>Nombre</label>
+    <input type="text" id="d-name" placeholder="Tu nombre">
+
+    <label>Teléfono</label>
+    <input type="tel" id="d-phone" placeholder="Tu número de contacto">
+
+    <div id="address-fields">
+      <label>Dirección de entrega</label>
+      <input type="text" id="d-address" placeholder="Calle, barrio, referencia">
+      <button class="gpsbtn" onclick="useGPS()">📍 Usar mi ubicación actual</button>
+    </div>
+
+    <label>Forma de pago</label>
+    <select id="d-payment">
+      <option value="Efectivo">Efectivo</option>
+      <option value="Transferencia / Nequi">Transferencia / Nequi</option>
+      <option value="Tarjeta (datáfono al recibir)">Tarjeta (datáfono al recibir)</option>
+    </select>
+
+    <label>Comentarios (opcional)</label>
+    <textarea id="d-comments" rows="2" placeholder="Ej: sin picante, alita adicional, etc."></textarea>
+
+    <p class="privacy">🔒 Tus datos solo se usan para procesar este pedido y nunca se compartirán con terceros, conforme a la Ley 1581 de 2012 de Protección de Datos.</p>
+  </div>
+
+  <div class="total-row"><span>Total</span><span id="cart-total">$0</span></div>
+  <button id="send-btn" onclick="sendOrder()" disabled>Enviar pedido por WhatsApp</button>
+</div>
+
+<!-- ===== Success ===== -->
+<div id="success">
+  <div class="box">
+    <div class="emoji">🍗✅</div>
+    <h3>¡Pedido enviado!</h3>
+    <p>Se abrió WhatsApp con el detalle de tu pedido. Confirma el envío y FricAlitas te responderá para coordinar la entrega. ¡Gracias por elegirnos!</p>
+    <button onclick="closeSuccess()">Listo</button>
+  </div>
+</div>
+
+<script>
+/* ===== Reloj y estado abierto/cerrado (Colombia UTC-5) ===== */
+function getColombiaNow(){
+  const now = new Date();
+  const utc = now.getTime() + now.getTimezoneOffset()*60000;
+  return new Date(utc - 5*3600000);
+}
+const SCHEDULE = {
+  // day: [openHour, openMin, closeHour, closeMin] - null = cerrado
+  0:[17,0,23,30], // domingo
+  1:[17,0,23,30],
+  2:null,         // martes cerrado
+  3:[17,0,23,30],
+  4:[17,0,23,30],
+  5:[17,0,23,30],
+  6:[17,0,23,30],
+};
+function updateClock(){
+  const d = getColombiaNow();
+  const day = d.getDay();
+  const h = d.getHours(), m = d.getMinutes(), s = d.getSeconds();
+  const pad = n => n.toString().padStart(2,'0');
+  const timeStr = `${pad(h)}:${pad(m)}:${pad(s)}`;
+  const dateStr = d.toLocaleDateString('es-CO',{weekday:'long',day:'numeric',month:'long'});
+
+  let isOpen = false;
+  const sched = SCHEDULE[day];
+  if(sched){
+    const minutesNow = h*60+m;
+    const openMin = sched[0]*60+sched[1];
+    const closeMin = sched[2]*60+sched[3];
+    isOpen = minutesNow >= openMin && minutesNow <= closeMin;
+  }
+
+  const gateClock = document.getElementById('gate-clock');
+  if(gateClock) gateClock.textContent = `${dateStr} · ${timeStr}`;
+
+  const gateStatus = document.getElementById('gate-status');
+  const headerStatus = document.getElementById('header-status');
+  const headerStatusText = document.getElementById('header-status-text');
+
+  if(isOpen){
+    if(gateStatus){gateStatus.textContent='🟢 ¡Estamos abiertos! Pide ya'; gateStatus.className='status open';}
+    if(headerStatus){headerStatus.classList.remove('closed');}
+    if(headerStatusText) headerStatusText.textContent='Abierto ahora';
+  } else {
+    if(gateStatus){gateStatus.textContent='🔴 Cerrado por ahora — ¡vuelve pronto!'; gateStatus.className='status closed';}
+    if(headerStatus){headerStatus.classList.add('closed');}
+    if(headerStatusText) headerStatusText.textContent='Cerrado ahora';
+  }
+
+  // resaltar día de hoy en tabla de horarios
+  document.querySelectorAll('.day[data-day]').forEach(el=>{
+    el.classList.toggle('today', parseInt(el.dataset.day)===day);
+  });
+}
+setInterval(updateClock,1000);
+updateClock();
+
+function closeGate(){
+  document.getElementById('gate').style.display='none';
+}
+
+/* ===== Carrito ===== */
+let cart = {}; // name -> {price, qty}
+
+function addItem(name, price){
+  if(!cart[name]) cart[name] = {price, qty:0};
+  cart[name].qty++;
+  renderCart();
+  pulseFab();
+}
+
+function step(name, price, delta){
+  if(!cart[name]) cart[name] = {price, qty:0};
+  cart[name].qty = Math.max(0, cart[name].qty + delta);
+  if(cart[name].qty===0) delete cart[name];
+  const countEl = document.getElementById('cnt-'+name);
+  if(countEl) countEl.textContent = cart[name] ? cart[name].qty : 0;
+  renderCart();
+}
+
+function pulseFab(){
+  const fab = document.getElementById('cart-fab');
+  fab.style.transform='scale(1.08)';
+  setTimeout(()=>fab.style.transform='scale(1)',150);
+}
+
+function fmt(n){
+  return '$'+n.toLocaleString('es-CO');
+}
+
+function renderCart(){
+  const itemsEl = document.getElementById('cart-items');
+  const fab = document.getElementById('cart-fab');
+  const fabCount = document.getElementById('fab-count');
+  const totalEl = document.getElementById('cart-total');
+  const sendBtn = document.getElementById('send-btn');
+  const formEl = document.getElementById('delivery-form');
+
+  const names = Object.keys(cart);
+  let totalQty = 0, total = 0;
+  names.forEach(n=>{ totalQty += cart[n].qty; total += cart[n].qty*cart[n].price; });
+
+  if(names.length===0){
+    itemsEl.innerHTML = '<div id="empty-cart">Tu carrito está vacío.<br>Agrega tus alitas, burgers y combos favoritos 🍗</div>';
+    formEl.style.display='none';
+    sendBtn.disabled=true;
+    fab.classList.add('hidden');
+  } else {
+    fab.classList.remove('hidden');
+    formEl.style.display='block';
+    sendBtn.disabled=false;
+    itemsEl.innerHTML = names.map(n=>{
+      const it = cart[n];
+      return `<div class="cart-item">
+        <div>
+          <div class="ci-name">${n}</div>
+          <div class="ci-price">${fmt(it.price)} c/u</div>
+        </div>
+        <div class="stepper">
+          <button onclick="changeQty('${n.replace(/'/g,"\\'")}', -1)">−</button>
+          <span class="count">${it.qty}</span>
+          <button onclick="changeQty('${n.replace(/'/g,"\\'")}', 1)">+</button>
+        </div>
+        <div class="ci-sub">${fmt(it.qty*it.price)}</div>
+      </div>`;
+    }).join('');
+  }
+
+  fabCount.textContent = totalQty;
+  totalEl.textContent = fmt(total);
+}
+
+function changeQty(name, delta){
+  if(!cart[name]) return;
+  cart[name].qty += delta;
+  if(cart[name].qty<=0) delete cart[name];
+  const countEl = document.getElementById('cnt-'+name);
+  if(countEl) countEl.textContent = cart[name] ? cart[name].qty : 0;
+  renderCart();
+}
+
+/* ===== Drawer ===== */
+function openDrawer(){
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('drawer').classList.add('show');
+}
+function closeDrawer(){
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('drawer').classList.remove('show');
+}
+
+function toggleAddressFields(){
+  const type = document.getElementById('d-type').value;
+  document.getElementById('address-fields').style.display = type==='domicilio' ? 'block' : 'none';
+}
+
+function useGPS(){
+  if(!navigator.geolocation){ alert('Tu navegador no soporta geolocalización.'); return; }
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const {latitude, longitude} = pos.coords;
+    document.getElementById('d-address').value = `Ubicación GPS: https://maps.google.com/?q=${latitude},${longitude}`;
+  }, ()=> alert('No pudimos obtener tu ubicación. Escribe tu dirección manualmente.'));
+}
+
+/* ===== Enviar pedido ===== */
+function sendOrder(){
+  const names = Object.keys(cart);
+  if(names.length===0) return;
+
+  const name = document.getElementById('d-name').value.trim();
+  const phone = document.getElementById('d-phone').value.trim();
+  const type = document.getElementById('d-type').value;
+  const address = document.getElementById('d-address').value.trim();
+  const payment = document.getElementById('d-payment').value;
+  const comments = document.getElementById('d-comments').value.trim();
+
+  let total = 0;
+  let lines = names.map(n=>{
+    const it = cart[n];
+    total += it.qty*it.price;
+    return `• ${it.qty}x ${n} — ${fmt(it.qty*it.price)}`;
+  });
+
+  let msg = `🍗 *Pedido FricAlitas Dosquebradas*\n\n`;
+  msg += lines.join('\n') + '\n\n';
+  msg += `*Total: ${fmt(total)}*\n\n`;
+  if(name) msg += `👤 Nombre: ${name}\n`;
+  if(phone) msg += `📞 Teléfono: ${phone}\n`;
+  msg += `🚚 Entrega: ${type==='domicilio' ? 'Domicilio' : 'Recoger en el FricaTruck'}\n`;
+  if(type==='domicilio' && address) msg += `📍 Dirección: ${address}\n`;
+  msg += `💳 Pago: ${payment}\n`;
+  if(comments) msg += `📝 Comentarios: ${comments}\n`;
+
+  const url = `https://wa.me/573128614711?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+
+  closeDrawer();
+  document.getElementById('success').classList.add('show');
+}
+
+function closeSuccess(){
+  document.getElementById('success').classList.remove('show');
+  // limpiar carrito tras enviar
+  cart = {};
+  document.querySelectorAll('.count[id^="cnt-"]').forEach(el=>el.textContent='0');
+  renderCart();
+}
+
+/* ===== Service Worker ===== */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
 
