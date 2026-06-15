@@ -21,18 +21,28 @@ Catálogo digital interactivo con carrito de pedido y envío directo por WhatsAp
 - Aviso de tratamiento de datos personales conforme a la **Ley 1581 de 2012 (Habeas Data)**.
 
 ## ⚙️ Instalación / publicación
-1. Sube toda la carpeta a GitHub Pages, Netlify o el hosting de preferencia.
-2. Verifica que `manifest.json`, `sw.js` y la carpeta `icons/` y `assets/` queden en la raíz junto a `index.html`.
-3. (Opcional) Reemplaza `assets/og-image.jpg` por una foto en mejor resolución para la vista previa al compartir en WhatsApp/redes.
+1. Sube **todos los archivos en la raíz del repositorio** (sin subcarpetas) a GitHub Pages, Netlify o el hosting de preferencia.
+2. Verifica que `manifest.json`, `sw.js`, los íconos y las fotos queden en la misma carpeta que `index.html`.
+3. (Opcional) Reemplaza `og-image.jpg` por una foto en mejor resolución para la vista previa al compartir en WhatsApp/redes.
 4. Comparte el enlace — los usuarios podrán instalar la app desde el navegador ("Agregar a pantalla de inicio").
 
-## 📁 Estructura
+## 📁 Estructura (todo en la raíz)
 ```
-index.html        → App principal (menú + carrito + pedido)
-manifest.json     → Configuración PWA
-sw.js             → Service Worker (modo offline)
-icons/            → Íconos de la app (192x192 y 512x512)
-assets/           → Fotos del menú extraídas del catálogo original
+index.html              → App principal (menú + carrito + pedido)
+manifest.json           → Configuración PWA
+sw.js                   → Service Worker (modo offline)
+icon-192.png            → Ícono PWA 192x192
+icon-512.png            → Ícono PWA 512x512
+og-image.jpg            → Imagen de vista previa al compartir
+prod_alitas_tray.jpg
+prod_fricapollo.jpg
+prod_fricaburger.jpg
+prod_tenders.jpg
+prod_fricacrush.jpg
+prod_ramo.jpg
+acomp_francesa.jpg
+acomp_criolla.jpg
+acomp_yucas.jpg
 ```
 
 ---
