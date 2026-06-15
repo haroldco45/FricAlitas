@@ -7,6 +7,7 @@ const ASSETS = [
   './icon-512.png',
   './prod_alitas_tray.jpg',
   './prod_fricapollo.jpg',
+  './prod_fricapollito.jpg',
   './prod_fricaburger.jpg',
   './prod_tenders.jpg',
   './prod_fricacrush.jpg',
